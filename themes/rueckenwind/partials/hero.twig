@@ -1,0 +1,84 @@
+{% set heroTitle = hero_title is defined and hero_title ? hero_title : title|default(settings.title) %}
+{% set heroDescription = hero_description is defined ? hero_description|trim : '' %}
+{% set heroImage = hero_image is defined and hero_image ? hero_image : '' %}
+{% set heroImageAlt = hero_image_alt is defined and hero_image_alt ? hero_image_alt : heroTitle %}
+{% set heroEyebrow = hero_eyebrow is defined and hero_eyebrow ? hero_eyebrow : '' %}
+{% set heroButtonHref = hero_button_href is defined and hero_button_href ? hero_button_href : '' %}
+{% set heroButtonLabel = hero_button_label is defined and hero_button_label ? hero_button_label : '' %}
+{% set heroClass = hero_class is defined and hero_class ? hero_class : 'mb-8' %}
+{% set heroImageSrc = heroImage %}
+{% if heroImage and not (heroImage starts with 'http://' or heroImage starts with 'https://') %}
+  {% set heroImageSrc = base_url ~ '/' ~ heroImage|trim('/') %}
+{% endif %}
+
+{% if heroTitle or heroDescription or heroImage or heroButtonLabel %}
+  <section class="not-prose {{ heroClass }}">
+    <div class="overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white/80 shadow-2xl shadow-gray-950/10 ring-1 ring-gray-950/5 dark:border-gray-800/80 dark:bg-gray-900/70 dark:ring-white/10">
+      {% if heroImage %}
+        <div class="relative isolate overflow-hidden bg-gray-950">
+          <img src="{{ heroImageSrc }}"
+               alt="{{ heroImageAlt|e }}"
+               class="h-64 w-full object-cover object-center sm:h-80 lg:h-[28rem]" />
+          <div class="absolute inset-0 bg-linear-to-t from-gray-950 via-gray-950/55 to-gray-950/10"></div>
+          <div class="absolute inset-x-0 bottom-0 p-5 sm:p-8 lg:p-10">
+            <div class="max-w-3xl">
+              {% if heroEyebrow %}
+                <p class="mb-3 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/80 backdrop-blur-sm">
+                  {{ heroEyebrow|e }}
+                </p>
+              {% endif %}
+              <h1 class="text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-sm sm:text-4xl lg:text-5xl">
+                {{ heroTitle|e }}
+              </h1>
+              {% if heroDescription %}
+                <p class="mt-4 max-w-2xl text-base/7 text-gray-100 sm:text-lg/8">
+                  {{ heroDescription|e }}
+                </p>
+              {% endif %}
+              {% if heroButtonHref and heroButtonLabel %}
+                <div class="mt-6">
+                  <a href="{{ heroButtonHref }}"
+                     class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-gray-950 shadow-lg shadow-gray-950/30 transition-colors hover:bg-primary-50">
+                    {{ heroButtonLabel|e }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="overflow-hidden bg-linear-to-br from-primary-50 via-white to-gray-50 px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12 dark:from-primary-900/20 dark:via-gray-950 dark:to-gray-900">
+          <div class="max-w-3xl">
+            {% if heroEyebrow %}
+              <p class="mb-3 inline-flex rounded-full border border-primary-200/80 bg-white/80 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-primary-700 shadow-sm shadow-primary-500/10 dark:border-primary-700/80 dark:bg-gray-900/70 dark:text-primary-300">
+                {{ heroEyebrow|e }}
+              </p>
+            {% endif %}
+            <h1 class="text-3xl font-semibold leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl dark:text-white">
+              {{ heroTitle|e }}
+            </h1>
+            {% if heroDescription %}
+              <p class="mt-4 max-w-2xl text-base/8 text-gray-600 sm:text-lg/8 dark:text-gray-300">
+                {{ heroDescription|e }}
+              </p>
+            {% endif %}
+            {% if heroButtonHref and heroButtonLabel %}
+              <div class="mt-6">
+                <a href="{{ heroButtonHref }}"
+                   class="inline-flex items-center gap-2 rounded-full bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-primary-600/20 transition-colors hover:bg-primary-700 dark:shadow-primary-950/40">
+                  {{ heroButtonLabel|e }}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}

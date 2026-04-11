@@ -1,5 +1,8 @@
 {% set published = metatabs.meta.manualdate ? metatabs.meta.manualdate : metatabs.meta.modified %}
 {% set theme = settings.themes.rueckenwind %}
+{% set pageHeroImage = metatabs.meta.heroimage|default('') %}
+{% set pageHeroImageAlt = metatabs.meta.heroimagealt|default(title) %}
+{% set pageHeroDescription = pageHeroImage ? metatabs.meta.description|default('') : '' %}
 
 <div class="flex flex-1">
 
@@ -11,11 +14,22 @@
       {% include 'partials/breadcrumb.twig' %}
     </nav>
 
+    {% if pageHeroImage %}
+      {% include 'partials/hero.twig' with {
+        hero_title: title,
+        hero_description: pageHeroDescription,
+        hero_image: pageHeroImage,
+        hero_image_alt: pageHeroImageAlt
+      } %}
+    {% endif %}
+
     <article class="prose w-full">
 
-      <h1 class="mt-0 text-3xl font-semibold leading-tight text-gray-950 dark:text-white sm:text-4xl">
-        {{ title }}
-      </h1>
+      {% if not pageHeroImage %}
+        <h1 class="mt-0 text-3xl font-semibold leading-tight text-gray-950 dark:text-white sm:text-4xl">
+          {{ title }}
+        </h1>
+      {% endif %}
 
       {# ── Top meta bar ──────────────────────────────────────────── #}
       {% set showDateTop   = 'top' in theme.datePosition|default([]) %}

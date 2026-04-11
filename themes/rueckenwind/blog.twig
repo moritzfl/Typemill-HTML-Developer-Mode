@@ -1,9 +1,25 @@
 {# Blog homepage – lists posts from a configured folder #}
 {% set theme = settings.themes.rueckenwind %}
+{% set blogHeroImage = metatabs.meta.heroimage|default('') %}
+{% set blogHeroImageAlt = metatabs.meta.heroimagealt|default(title) %}
+{% set blogHeroDescription = blogHeroImage ? metatabs.meta.description|default('') : '' %}
 
 <main class="flex-1 min-w-0 max-w-4xl px-4 py-8 sm:px-6 lg:px-10 xl:px-14">
 
-  {% if theme.blogintro %}
+  {% if blogHeroImage %}
+    {% include 'partials/hero.twig' with {
+      hero_title: title,
+      hero_description: blogHeroDescription,
+      hero_image: blogHeroImage,
+      hero_image_alt: blogHeroImageAlt
+    } %}
+
+    {% if theme.blogintro and content %}
+      <article class="prose mb-10">
+        {{ content }}
+      </article>
+    {% endif %}
+  {% elseif theme.blogintro %}
     <article class="prose mb-10">
       <h1 class="text-3xl font-semibold text-gray-950 dark:text-white">{{ title|e }}</h1>
       {{ content }}
