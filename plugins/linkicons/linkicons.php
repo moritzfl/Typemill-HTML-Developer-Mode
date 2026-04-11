@@ -150,6 +150,40 @@ class linkicons extends Plugin
         return self::$icons[$key];
     }
 
+    private static function addOrAppendSvgStyle(string $svg, string $style): string
+    {
+        if (preg_match('/<svg\b[^>]*\bstyle=(["\'])(.*?)\1/i', $svg, $m)) {
+            $existingStyle = trim($m[2]);
+            $mergedStyle = $existingStyle === '' ? $style : rtrim($existingStyle, ';') . ';' . $style;
+            return preg_replace(
+                '/(<svg\b[^>]*\bstyle=)(["\'])(.*?)\2/i',
+                '$1$2' . $mergedStyle . '$2',
+                $svg,
+                1
+            );
+        }
+
+        return preg_replace('/<svg\b([^>]*)>/i', '<svg$1 style="' . $style . '">', $svg, 1);
+    }
+
+    private static function prepareIconMarkup(string $icon, bool $before, bool $iconOnly): string
+    {
+        $styles = [
+            'display:inline-block',
+            'width:1em',
+            'height:1em',
+            'vertical-align:-0.15em',
+            'flex:none',
+            'fill:currentColor',
+        ];
+
+        if (!$iconOnly) {
+            $styles[] = $before ? 'margin-right:0.3em' : 'margin-left:0.3em';
+        }
+
+        return self::addOrAppendSvgStyle($icon, implode(';', $styles) . ';');
+    }
+
     private static function addClassToAnchorAttrs(string $attrs, string $class): string
     {
         if (preg_match('/\bclass\s*=\s*"([^"]*)"/i', $attrs, $m)) {
@@ -270,6 +304,7 @@ class linkicons extends Plugin
                     return $m[0];
                 }
 
+                $icon = self::prepareIconMarkup($icon, $before, $isEmptyTextOnlyLink);
                 $modified = true;
                 if ($isEmptyTextOnlyLink) {
                     $attrs = self::addClassToAnchorAttrs($attrs, self::ICON_ONLY_LINK_CLASS);
@@ -284,12 +319,6 @@ class linkicons extends Plugin
         );
 
         if ($modified) {
-            $margin = $before ? 'margin-right:0.3em;' : 'margin-left:0.3em;';
-            $this->addInlineCSS(
-                '.link-svc-icon{display:inline-block;width:1em;height:1em;' .
-                'vertical-align:-0.15em;' . $margin . 'fill:currentColor;}' .
-                '.'.self::ICON_ONLY_LINK_CLASS.' .link-svc-icon{margin-right:0;margin-left:0;}'
-            );
             $event->setData($html);
         }
     }
