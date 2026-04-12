@@ -1,0 +1,3 @@
+SITE_FILES: Site-Dateien
+SITEFILES_EXTRA_RULES_LABEL: Zusätzliche robots.txt-Regeln
+SITEFILES_EXTRA_RULES_DESCRIPTION: Optionale zusätzliche Zeilen, die unverändert an robots.txt angehängt werden.

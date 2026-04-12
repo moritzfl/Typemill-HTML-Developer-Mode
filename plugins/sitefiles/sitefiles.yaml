@@ -1,0 +1,16 @@
+name: Site Files
+version: 1.0.0
+description: Serve a public robots.txt and expose the sitemap at /sitemap.xml.
+author: Moritz
+license: LGPL
+
+settings:
+  extra_rules: ''
+
+forms:
+  fields:
+    extra_rules:
+      type: textarea
+      label: 'sitefiles.extra_rules_label'
+      placeholder: "Disallow: /private/\nCrawl-delay: 10"
+      description: 'sitefiles.extra_rules_description'

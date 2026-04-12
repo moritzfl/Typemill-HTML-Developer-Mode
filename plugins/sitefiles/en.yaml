@@ -1,0 +1,3 @@
+SITE_FILES: Site Files
+SITEFILES_EXTRA_RULES_LABEL: Additional robots.txt rules
+SITEFILES_EXTRA_RULES_DESCRIPTION: Optional extra lines appended verbatim to robots.txt.

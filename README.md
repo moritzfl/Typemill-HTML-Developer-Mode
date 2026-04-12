@@ -39,6 +39,16 @@ non-image files (PDFs, audio, playlists, archives, etc.) onto the server without
 
 ---
 
+### `sitefiles` — Site Files
+
+Adds two public frontend routes for search-engine facing site files: `robots.txt` and `sitemap.xml`. The plugin
+generates a simple `robots.txt` from the current site URL and exposes Typemill's cached sitemap at the conventional
+root path `/sitemap.xml`.
+
+→ See [`plugins/sitefiles/README.md`](plugins/sitefiles/README.md) for full documentation.
+
+---
+
 ### `linkicons` — Link Icons
 
 Automatically prepends (or appends) small service icons to matching links in rendered HTML. Supports GitHub, GitLab,
