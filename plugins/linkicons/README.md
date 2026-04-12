@@ -8,6 +8,10 @@ See [Installation in the project README](../../README.md#installation).
 
 ## Supported services
 
+### Typemill
+
+- **Typemill** (`typemill.net`)
+
 ### Development & open source
 
 - **GitHub** (`github.com`)

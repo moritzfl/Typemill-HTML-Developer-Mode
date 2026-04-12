@@ -34,6 +34,7 @@ settings:
   telegram: true
   tumblr: true
   twitch: true
+  typemill: true
   twitter: true
   whatsapp: true
   wikipedia: true
@@ -166,6 +167,10 @@ forms:
           type: checkbox
           label: 'Twitch'
           checkboxlabel: 'linkicons.twitch_label'
+        typemill:
+          type: checkbox
+          label: 'Typemill'
+          checkboxlabel: 'linkicons.typemill_label'
         twitter:
           type: checkbox
           label: 'Twitter'
