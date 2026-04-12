@@ -17,6 +17,7 @@ class linkicons extends Plugin
 
     // Simple domain-based matching
     private const DOMAINS = [
+        'typemill.net'           => 'typemill',
         'github.com'             => 'github',
         'gitlab.com'             => 'gitlab',
         'hub.docker.com'         => 'docker',
