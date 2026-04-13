@@ -18,60 +18,111 @@ class linkicons extends Plugin
 
     // Simple domain-based matching
     private const DOMAINS = [
-        'typemill.net'           => 'typemill',
-        'github.com'             => 'github',
-        'gitlab.com'             => 'gitlab',
-        'hub.docker.com'         => 'docker',
-        'paypal.com'             => 'paypal',
-        'paypal.me'              => 'paypal',
-        'patreon.com'            => 'patreon',
-        'ko-fi.com'              => 'kofi',
-        'buymeacoffee.com'       => 'buymeacoffee',
-        'liberapay.com'          => 'liberapay',
-        'opencollective.com'     => 'opencollective',
-        'plugins.jetbrains.com'  => 'jetbrainsmarketplace',
-        'codeberg.org'           => 'codeberg',
-        'wikipedia.org'          => 'wikipedia',
-        'youtube.com'            => 'youtube',
-        'youtu.be'               => 'youtube',
-        'store.steampowered.com' => 'steam',
-        'steamcommunity.com'     => 'steam',
-        'apps.apple.com'         => 'appstore',
-        'play.google.com'        => 'googleplay',
-        'flathub.org'            => 'flathub',
-        'apps.microsoft.com'     => 'microsoftstore',
-        'xbox.com'               => 'xbox',
-        'nintendo.com'           => 'nintendo',
-        'playstation.com'        => 'playstation',
-        'snapcraft.io'           => 'snapcraft',
-        'reddit.com'             => 'reddit',
-        'imgur.com'              => 'imgur',
-        'pypi.org'               => 'pypi',
-        'twitter.com'            => 'twitter',
-        'x.com'                  => 'twitter',
-        'facebook.com'           => 'facebook',
-        'instagram.com'          => 'instagram',
-        'linkedin.com'           => 'linkedin',
-        'tiktok.com'             => 'tiktok',
-        'bsky.app'               => 'bluesky',
-        'threads.net'            => 'threads',
-        'pinterest.com'          => 'pinterest',
-        'discord.com'            => 'discord',
-        'discord.gg'             => 'discord',
-        'twitch.tv'              => 'twitch',
-        'tumblr.com'             => 'tumblr',
-        'whatsapp.com'           => 'whatsapp',
-        'wa.me'                  => 'whatsapp',
-        'telegram.org'           => 'telegram',
-        'telegram.me'            => 'telegram',
-        't.me'                   => 'telegram',
+        'typemill.net'                 => 'typemill',
+        'github.com'                   => 'github',
+        'gitlab.com'                   => 'gitlab',
+        'hub.docker.com'               => 'docker',
+        'npmjs.com'                    => 'npm',
+        'packagist.org'                => 'packagist',
+        'crates.io'                    => 'cratesio',
+        'nuget.org'                    => 'nuget',
+        'rubygems.org'                 => 'rubygems',
+        'brew.sh'                      => 'homebrew',
+        'formulae.brew.sh'             => 'homebrew',
+        'paypal.com'                   => 'paypal',
+        'paypal.me'                    => 'paypal',
+        'patreon.com'                  => 'patreon',
+        'ko-fi.com'                    => 'kofi',
+        'buymeacoffee.com'             => 'buymeacoffee',
+        'liberapay.com'                => 'liberapay',
+        'opencollective.com'           => 'opencollective',
+        'plugins.jetbrains.com'        => 'jetbrainsmarketplace',
+        'marketplace.visualstudio.com' => 'visualstudiomarketplace',
+        'chromewebstore.google.com'    => 'chromewebstore',
+        'codeberg.org'                 => 'codeberg',
+        'wikipedia.org'                => 'wikipedia',
+        'youtube.com'                  => 'youtube',
+        'youtu.be'                     => 'youtube',
+        'joinpeertube.org'             => 'peertube',
+        'substack.com'                 => 'substack',
+        'medium.com'                   => 'medium',
+        'dev.to'                       => 'devto',
+        'hashnode.com'                 => 'hashnode',
+        'signal.org'                   => 'signal',
+        'signal.me'                    => 'signal',
+        'signal.group'                 => 'signal',
+        'joplinapp.org'                => 'joplin',
+        'joplincloud.com'              => 'joplin',
+        'matrix.to'                    => 'matrix',
+        'matrix.org'                   => 'matrix',
+        'element.io'                   => 'element',
+        'slack.com'                    => 'slack',
+        'vimeo.com'                    => 'vimeo',
+        'qobuz.com'                    => 'qobuz',
+        'deezer.com'                   => 'deezer',
+        'music.apple.com'              => 'applemusic',
+        'tidal.com'                    => 'tidal',
+        'spotify.com'                  => 'spotify',
+        'open.spotify.com'             => 'spotify',
+        'soundcloud.com'               => 'soundcloud',
+        'bandcamp.com'                 => 'bandcamp',
+        'figma.com'                    => 'figma',
+        'dribbble.com'                 => 'dribbble',
+        'behance.net'                  => 'behance',
+        'stackoverflow.com'            => 'stackoverflow',
+        'store.steampowered.com'       => 'steam',
+        'steamcommunity.com'           => 'steam',
+        'apps.apple.com'               => 'appstore',
+        'play.google.com'              => 'googleplay',
+        'flathub.org'                  => 'flathub',
+        'apps.microsoft.com'           => 'microsoftstore',
+        'xbox.com'                     => 'xbox',
+        'nintendo.com'                 => 'nintendo',
+        'playstation.com'              => 'playstation',
+        'snapcraft.io'                 => 'snapcraft',
+        'reddit.com'                   => 'reddit',
+        'imgur.com'                    => 'imgur',
+        'pypi.org'                     => 'pypi',
+        'twitter.com'                  => 'twitter',
+        'x.com'                        => 'twitter',
+        'facebook.com'                 => 'facebook',
+        'instagram.com'                => 'instagram',
+        'linkedin.com'                 => 'linkedin',
+        'tiktok.com'                   => 'tiktok',
+        'bsky.app'                     => 'bluesky',
+        'threads.net'                  => 'threads',
+        'pinterest.com'                => 'pinterest',
+        'discord.com'                  => 'discord',
+        'discord.gg'                   => 'discord',
+        'twitch.tv'                    => 'twitch',
+        'tumblr.com'                   => 'tumblr',
+        'whatsapp.com'                 => 'whatsapp',
+        'wa.me'                        => 'whatsapp',
+        'telegram.org'                 => 'telegram',
+        'telegram.me'                  => 'telegram',
+        't.me'                         => 'telegram',
+        'podcasts.apple.com'           => 'applepodcasts',
+        'pocketcasts.com'              => 'pocketcasts',
+        'overcast.fm'                  => 'overcast',
+        'castbox.fm'                   => 'castbox',
+        'iheart.com'                   => 'iheartradio',
+    ];
+
+    // Path-based matches that should override a broader domain icon
+    private const PRIORITY_PATTERNS = [
+        'githubsponsors' => '/\/\/(?:[\w.-]+\.)?github\.com\/sponsors(?:\/|$)/i',
+        'chromewebstore' => '/\/\/chrome\.google\.com\/webstore(?:\/|$)/i',
+        'firefoxaddons'  => '/\/\/addons\.mozilla\.org\/(?:[^\/]+\/)?firefox\/addon(?:s)?\/[^\/?#]+/i',
     ];
 
     // Pattern-based matching (regex against full URL)
     private const PATTERNS = [
-        'rss'      => '/\.(rss|atom)(\?.*)?$|\/(feed|rss|atom)(\/|\?|$)/i',
-        'mastodon' => '/mastodon|mstdn|todon|\b(toot|troet)\b|\/@[\w.]+(@[\w.]+)?(\/|$)/i',
-        'lemmy'    => '/lemmy|feddit|\/[cu]\/[\w.-]+(@[\w.-]+)?(\/|$)/i',
+        'rss'       => '/\.(rss|atom)(\?.*)?$|\/(feed|rss|atom)(\/|\?|$)/i',
+        'mastodon'  => '/mastodon|mstdn|todon|\b(toot|troet)\b|\/@[\w.]+(@[\w.]+)?(\/|$)/i',
+        'lemmy'     => '/lemmy|feddit|\/[cu]\/[\w.-]+(@[\w.-]+)?(\/|$)/i',
+        'joplin'    => '/\/\/[^\/]*joplin/i',
+        'peertube'  => '/peertube|joinpeertube/i',
+        'pixelfed'  => '/pixelfed/i',
     ];
 
     private static $icons = [];
@@ -80,6 +131,7 @@ class linkicons extends Plugin
     {
         return array_values(array_unique(array_merge(
             array_values(self::DOMAINS),
+            array_keys(self::PRIORITY_PATTERNS),
             array_keys(self::PATTERNS)
         )));
     }
@@ -283,8 +335,9 @@ class linkicons extends Plugin
         }
 
         $settings        = self::normalizeSettings($this->getPluginSettings());
-        $enabledDomains  = [];
-        $enabledPatterns = [];
+        $enabledDomains   = [];
+        $enabledPriorityPatterns = [];
+        $enabledPatterns  = [];
         $fallbackExternal = !empty($settings['external']);
         $fallbackInternal = !empty($settings['internal']);
         $before          = ($settings['position'] ?? 'before') !== 'after';
@@ -295,13 +348,19 @@ class linkicons extends Plugin
             }
         }
 
+        foreach (self::PRIORITY_PATTERNS as $key => $pattern) {
+            if (!empty($settings[$key])) {
+                $enabledPriorityPatterns[$key] = $pattern;
+            }
+        }
+
         foreach (self::PATTERNS as $key => $pattern) {
             if (!empty($settings[$key])) {
                 $enabledPatterns[$key] = $pattern;
             }
         }
 
-        if (empty($enabledDomains) && empty($enabledPatterns) && !$fallbackExternal && !$fallbackInternal) {
+        if (empty($enabledDomains) && empty($enabledPriorityPatterns) && empty($enabledPatterns) && !$fallbackExternal && !$fallbackInternal) {
             return;
         }
 
@@ -314,7 +373,7 @@ class linkicons extends Plugin
 
         $html = preg_replace_callback(
             '/<a(\s[^>]*)>(.*?)<\/a>/is',
-            function ($m) use ($enabledDomains, $enabledPatterns, $fallbackExternal, $fallbackInternal, $before, $currentHost, &$modified) {
+            function ($m) use ($enabledDomains, $enabledPriorityPatterns, $enabledPatterns, $fallbackExternal, $fallbackInternal, $before, $currentHost, &$modified) {
                 $attrs   = $m[1];
                 $content = $m[2];
                 $textContent = trim(strip_tags($content));
@@ -337,8 +396,15 @@ class linkicons extends Plugin
                 $url  = $href[1];
                 $icon = null;
 
+                foreach ($enabledPriorityPatterns as $key => $pattern) {
+                    if (preg_match($pattern, $url)) {
+                        $icon = self::loadIcon($key);
+                        break;
+                    }
+                }
+
                 foreach ($enabledDomains as $domain => $key) {
-                    if (preg_match('/\/\/(?:[\w.-]+\.)?' . preg_quote($domain, '/') . '(?:\/|:|$)/i', $url)) {
+                    if (!$icon && preg_match('/\/\/(?:[\w.-]+\.)?' . preg_quote($domain, '/') . '(?:\/|:|$)/i', $url)) {
                         $icon = self::loadIcon($key);
                         break;
                     }

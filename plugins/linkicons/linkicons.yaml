@@ -9,45 +9,83 @@ settings:
   appstore: true
   bluesky: true
   buymeacoffee: true
+  chromewebstore: true
   codeberg: true
+  cratesio: true
+  devto: true
   discord: true
   docker: true
+  deezer: true
+  element: true
   facebook: true
+  figma: true
+  firefoxaddons: true
   flathub: true
+  githubsponsors: true
   github: true
   gitlab: true
   googleplay: true
+  hashnode: true
+  homebrew: true
   imgur: true
   instagram: true
+  joplin: true
   jetbrainsmarketplace: true
   kofi: true
   lemmy: true
   liberapay: true
   linkedin: true
+  applemusic: true
+  matrix: true
   mastodon: true
+  medium: true
   microsoftstore: true
   nintendo: true
+  npm: true
+  nuget: true
   opencollective: true
+  packagist: true
   patreon: true
   paypal: true
+  peertube: true
   pinterest: true
+  pixelfed: true
   playstation: true
   pypi: true
   reddit: true
+  rubygems: true
   rss: true
+  qobuz: true
+  signal: true
+  slack: true
   snapcraft: true
+  soundcloud: true
+  spotify: true
+  stackoverflow: true
   steam: true
+  substack: true
   threads: true
   tiktok: true
   telegram: true
+  tidal: true
   tumblr: true
   twitch: true
   typemill: true
   twitter: true
+  vimeo: true
+  visualstudiomarketplace: true
   whatsapp: true
   wikipedia: true
   xbox: true
   youtube: true
+  bandcamp: true
+  behance: true
+  dribbble: true
+  applepodcasts: true
+  pocketcasts: true
+  overcast: true
+  castbox: true
+  iheartradio: true
   external: false
   internal: false
   position: before
@@ -83,6 +121,10 @@ forms:
           type: checkbox
           label: 'Docker Hub'
           checkboxlabel: 'linkicons.docker_label'
+        deezer:
+          type: checkbox
+          label: 'Deezer'
+          checkboxlabel: 'linkicons.deezer_label'
         facebook:
           type: checkbox
           label: 'Facebook'
@@ -119,6 +161,10 @@ forms:
           type: checkbox
           label: 'Instagram'
           checkboxlabel: 'linkicons.instagram_label'
+        joplin:
+          type: checkbox
+          label: 'Joplin'
+          checkboxlabel: 'linkicons.joplin_label'
         lemmy:
           type: checkbox
           label: 'Lemmy'
@@ -131,6 +177,10 @@ forms:
           type: checkbox
           label: 'LinkedIn'
           checkboxlabel: 'linkicons.linkedin_label'
+        applemusic:
+          type: checkbox
+          label: 'Apple Music'
+          checkboxlabel: 'linkicons.applemusic_label'
         mastodon:
           type: checkbox
           label: 'Mastodon'
@@ -175,6 +225,10 @@ forms:
           type: checkbox
           label: 'RSS / Atom'
           checkboxlabel: 'linkicons.rss_label'
+        qobuz:
+          type: checkbox
+          label: 'Qobuz'
+          checkboxlabel: 'linkicons.qobuz_label'
         snapcraft:
           type: checkbox
           label: 'Snapcraft'
@@ -227,6 +281,142 @@ forms:
           type: checkbox
           label: 'YouTube'
           checkboxlabel: 'linkicons.youtube_label'
+        chromewebstore:
+          type: checkbox
+          label: 'Chrome Web Store'
+          checkboxlabel: 'linkicons.chromewebstore_label'
+        cratesio:
+          type: checkbox
+          label: 'crates.io'
+          checkboxlabel: 'linkicons.cratesio_label'
+        devto:
+          type: checkbox
+          label: 'dev.to'
+          checkboxlabel: 'linkicons.devto_label'
+        element:
+          type: checkbox
+          label: 'Element'
+          checkboxlabel: 'linkicons.element_label'
+        figma:
+          type: checkbox
+          label: 'Figma'
+          checkboxlabel: 'linkicons.figma_label'
+        firefoxaddons:
+          type: checkbox
+          label: 'Firefox Add-ons'
+          checkboxlabel: 'linkicons.firefoxaddons_label'
+        githubsponsors:
+          type: checkbox
+          label: 'GitHub Sponsors'
+          checkboxlabel: 'linkicons.githubsponsors_label'
+        hashnode:
+          type: checkbox
+          label: 'Hashnode'
+          checkboxlabel: 'linkicons.hashnode_label'
+        homebrew:
+          type: checkbox
+          label: 'Homebrew'
+          checkboxlabel: 'linkicons.homebrew_label'
+        matrix:
+          type: checkbox
+          label: 'Matrix'
+          checkboxlabel: 'linkicons.matrix_label'
+        medium:
+          type: checkbox
+          label: 'Medium'
+          checkboxlabel: 'linkicons.medium_label'
+        npm:
+          type: checkbox
+          label: 'npm'
+          checkboxlabel: 'linkicons.npm_label'
+        nuget:
+          type: checkbox
+          label: 'NuGet'
+          checkboxlabel: 'linkicons.nuget_label'
+        packagist:
+          type: checkbox
+          label: 'Packagist'
+          checkboxlabel: 'linkicons.packagist_label'
+        peertube:
+          type: checkbox
+          label: 'PeerTube'
+          checkboxlabel: 'linkicons.peertube_label'
+        pixelfed:
+          type: checkbox
+          label: 'Pixelfed'
+          checkboxlabel: 'linkicons.pixelfed_label'
+        rubygems:
+          type: checkbox
+          label: 'RubyGems'
+          checkboxlabel: 'linkicons.rubygems_label'
+        signal:
+          type: checkbox
+          label: 'Signal'
+          checkboxlabel: 'linkicons.signal_label'
+        slack:
+          type: checkbox
+          label: 'Slack'
+          checkboxlabel: 'linkicons.slack_label'
+        soundcloud:
+          type: checkbox
+          label: 'SoundCloud'
+          checkboxlabel: 'linkicons.soundcloud_label'
+        spotify:
+          type: checkbox
+          label: 'Spotify'
+          checkboxlabel: 'linkicons.spotify_label'
+        stackoverflow:
+          type: checkbox
+          label: 'Stack Overflow'
+          checkboxlabel: 'linkicons.stackoverflow_label'
+        substack:
+          type: checkbox
+          label: 'Substack'
+          checkboxlabel: 'linkicons.substack_label'
+        tidal:
+          type: checkbox
+          label: 'TIDAL'
+          checkboxlabel: 'linkicons.tidal_label'
+        vimeo:
+          type: checkbox
+          label: 'Vimeo'
+          checkboxlabel: 'linkicons.vimeo_label'
+        visualstudiomarketplace:
+          type: checkbox
+          label: 'Visual Studio Marketplace'
+          checkboxlabel: 'linkicons.visualstudiomarketplace_label'
+        bandcamp:
+          type: checkbox
+          label: 'Bandcamp'
+          checkboxlabel: 'linkicons.bandcamp_label'
+        behance:
+          type: checkbox
+          label: 'Behance'
+          checkboxlabel: 'linkicons.behance_label'
+        dribbble:
+          type: checkbox
+          label: 'Dribbble'
+          checkboxlabel: 'linkicons.dribbble_label'
+        applepodcasts:
+          type: checkbox
+          label: 'Apple Podcasts'
+          checkboxlabel: 'linkicons.applepodcasts_label'
+        pocketcasts:
+          type: checkbox
+          label: 'Pocket Casts'
+          checkboxlabel: 'linkicons.pocketcasts_label'
+        overcast:
+          type: checkbox
+          label: 'Overcast'
+          checkboxlabel: 'linkicons.overcast_label'
+        castbox:
+          type: checkbox
+          label: 'Castbox'
+          checkboxlabel: 'linkicons.castbox_label'
+        iheartradio:
+          type: checkbox
+          label: 'iHeartRadio'
+          checkboxlabel: 'linkicons.iheartradio_label'
 
     fallbacks:
       type: fieldset

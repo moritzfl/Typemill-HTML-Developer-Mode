@@ -2,12 +2,22 @@ LINK_ICONS: Link Icons
 LINKICONS_GITHUB_LABEL: Add icon to github.com links
 LINKICONS_GITLAB_LABEL: Add icon to gitlab.com links
 LINKICONS_DOCKER_LABEL: Add icon to hub.docker.com links
+LINKICONS_NPM_LABEL: Add icon to npmjs.com links
+LINKICONS_PACKAGIST_LABEL: Add icon to packagist.org links
+LINKICONS_CRATESIO_LABEL: Add icon to crates.io links
+LINKICONS_NUGET_LABEL: Add icon to nuget.org links
+LINKICONS_RUBYGEMS_LABEL: Add icon to rubygems.org links
+LINKICONS_HOMEBREW_LABEL: Add icon to Homebrew links
 LINKICONS_PAYPAL_LABEL: Add icon to PayPal links
 LINKICONS_PATREON_LABEL: Add icon to Patreon links
 LINKICONS_KOFI_LABEL: Add icon to Ko-fi links
 LINKICONS_BUYMEACOFFEE_LABEL: Add icon to Buy Me a Coffee links
 LINKICONS_LIBERAPAY_LABEL: Add icon to Liberapay links
 LINKICONS_OPENCOLLECTIVE_LABEL: Add icon to Open Collective links
+LINKICONS_GITHUBSPONSORS_LABEL: Add icon to GitHub Sponsors links
+LINKICONS_VISUALSTUDIOMARKETPLACE_LABEL: Add icon to Visual Studio Marketplace links
+LINKICONS_CHROMEWEBSTORE_LABEL: Add icon to Chrome Web Store links
+LINKICONS_FIREFOXADDONS_LABEL: Add icon to Firefox Add-ons links
 LINKICONS_CODEBERG_LABEL: Add icon to codeberg.org links
 LINKICONS_WIKIPEDIA_LABEL: Add icon to wikipedia.org links
 LINKICONS_XBOX_LABEL: Add icon to xbox.com links
@@ -25,11 +35,22 @@ LINKICONS_PLAYSTATION_LABEL: Add icon to playstation.com links
 LINKICONS_RSS_LABEL: Add icon to RSS/Atom feed links
 LINKICONS_IMGUR_LABEL: Add icon to imgur.com links
 LINKICONS_MASTODON_LABEL: Add icon to Mastodon profile links
+LINKICONS_PEERTUBE_LABEL: Add icon to PeerTube links
+LINKICONS_PIXELFED_LABEL: Add icon to Pixelfed links
 LINKICONS_PYPI_LABEL: Add icon to pypi.org links
 LINKICONS_REDDIT_LABEL: Add icon to reddit.com links
+LINKICONS_SUBSTACK_LABEL: Add icon to Substack links
+LINKICONS_MEDIUM_LABEL: Add icon to Medium links
+LINKICONS_DEVTO_LABEL: Add icon to dev.to links
+LINKICONS_HASHNODE_LABEL: Add icon to Hashnode links
 LINKICONS_BLUESKY_LABEL: Add icon to bsky.app links
 LINKICONS_DISCORD_LABEL: Add icon to Discord links
 LINKICONS_FACEBOOK_LABEL: Add icon to facebook.com links
+LINKICONS_SIGNAL_LABEL: Add icon to Signal links
+LINKICONS_JOPLIN_LABEL: Add icon to Joplin links
+LINKICONS_MATRIX_LABEL: Add icon to Matrix links
+LINKICONS_ELEMENT_LABEL: Add icon to Element links
+LINKICONS_SLACK_LABEL: Add icon to Slack links
 LINKICONS_INSTAGRAM_LABEL: Add icon to instagram.com links
 LINKICONS_LINKEDIN_LABEL: Add icon to linkedin.com links
 LINKICONS_PINTEREST_LABEL: Add icon to pinterest.com links
@@ -37,10 +58,27 @@ LINKICONS_THREADS_LABEL: Add icon to threads.net links
 LINKICONS_TIKTOK_LABEL: Add icon to tiktok.com links
 LINKICONS_TUMBLR_LABEL: Add icon to tumblr.com links
 LINKICONS_TWITCH_LABEL: Add icon to twitch.tv links
+LINKICONS_VIMEO_LABEL: Add icon to Vimeo links
+LINKICONS_QOBUZ_LABEL: Add icon to Qobuz links
+LINKICONS_DEEZER_LABEL: Add icon to Deezer links
+LINKICONS_APPLEMUSIC_LABEL: Add icon to Apple Music links
+LINKICONS_TIDAL_LABEL: Add icon to TIDAL links
+LINKICONS_SPOTIFY_LABEL: Add icon to Spotify links
+LINKICONS_SOUNDCLOUD_LABEL: Add icon to SoundCloud links
+LINKICONS_BANDCAMP_LABEL: Add icon to Bandcamp links
+LINKICONS_FIGMA_LABEL: Add icon to Figma links
+LINKICONS_DRIBBBLE_LABEL: Add icon to Dribbble links
+LINKICONS_BEHANCE_LABEL: Add icon to Behance links
+LINKICONS_STACKOVERFLOW_LABEL: Add icon to Stack Overflow links
 LINKICONS_TELEGRAM_LABEL: Add icon to Telegram links
 LINKICONS_TYPEMILL_LABEL: Add icon to typemill.net links
 LINKICONS_TWITTER_LABEL: Add icon to Twitter/X links
 LINKICONS_WHATSAPP_LABEL: Add icon to WhatsApp links
+LINKICONS_APPLEPODCASTS_LABEL: Add icon to Apple Podcasts links
+LINKICONS_POCKETCASTS_LABEL: Add icon to Pocket Casts links
+LINKICONS_OVERCAST_LABEL: Add icon to Overcast links
+LINKICONS_CASTBOX_LABEL: Add icon to Castbox links
+LINKICONS_IHEARTRADIO_LABEL: Add icon to iHeartRadio links
 LINKICONS_EXTERNAL_ICON: External Links
 LINKICONS_EXTERNAL_LABEL: Add globe icon to all other external links
 LINKICONS_INTERNAL_ICON: Internal Links
