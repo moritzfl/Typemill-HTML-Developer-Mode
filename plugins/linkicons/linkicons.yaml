@@ -8,6 +8,7 @@ license: LGPL
 settings:
   appstore: true
   bluesky: true
+  buymeacoffee: true
   codeberg: true
   discord: true
   docker: true
@@ -19,11 +20,16 @@ settings:
   imgur: true
   instagram: true
   jetbrainsmarketplace: true
+  kofi: true
   lemmy: true
+  liberapay: true
   linkedin: true
   mastodon: true
   microsoftstore: true
   nintendo: true
+  opencollective: true
+  patreon: true
+  paypal: true
   pinterest: true
   playstation: true
   pypi: true
@@ -61,6 +67,10 @@ forms:
           type: checkbox
           label: 'Bluesky'
           checkboxlabel: 'linkicons.bluesky_label'
+        buymeacoffee:
+          type: checkbox
+          label: 'Buy Me a Coffee'
+          checkboxlabel: 'linkicons.buymeacoffee_label'
         codeberg:
           type: checkbox
           label: 'Codeberg'
@@ -97,6 +107,10 @@ forms:
           type: checkbox
           label: 'JetBrains Marketplace'
           checkboxlabel: 'linkicons.jetbrainsmarketplace_label'
+        kofi:
+          type: checkbox
+          label: 'Ko-fi'
+          checkboxlabel: 'linkicons.kofi_label'
         imgur:
           type: checkbox
           label: 'Imgur'
@@ -109,6 +123,10 @@ forms:
           type: checkbox
           label: 'Lemmy'
           checkboxlabel: 'linkicons.lemmy_label'
+        liberapay:
+          type: checkbox
+          label: 'Liberapay'
+          checkboxlabel: 'linkicons.liberapay_label'
         linkedin:
           type: checkbox
           label: 'LinkedIn'
@@ -125,6 +143,18 @@ forms:
           type: checkbox
           label: 'Nintendo'
           checkboxlabel: 'linkicons.nintendo_label'
+        opencollective:
+          type: checkbox
+          label: 'Open Collective'
+          checkboxlabel: 'linkicons.opencollective_label'
+        patreon:
+          type: checkbox
+          label: 'Patreon'
+          checkboxlabel: 'linkicons.patreon_label'
+        paypal:
+          type: checkbox
+          label: 'PayPal'
+          checkboxlabel: 'linkicons.paypal_label'
         pinterest:
           type: checkbox
           label: 'Pinterest'

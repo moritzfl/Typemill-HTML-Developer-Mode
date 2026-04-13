@@ -2,6 +2,12 @@ LINK_ICONS: Link-Icons
 LINKICONS_GITHUB_LABEL: Icon bei github.com-Links anzeigen
 LINKICONS_GITLAB_LABEL: Icon bei gitlab.com-Links anzeigen
 LINKICONS_DOCKER_LABEL: Icon bei hub.docker.com-Links anzeigen
+LINKICONS_PAYPAL_LABEL: Icon bei PayPal-Links anzeigen
+LINKICONS_PATREON_LABEL: Icon bei Patreon-Links anzeigen
+LINKICONS_KOFI_LABEL: Icon bei Ko-fi-Links anzeigen
+LINKICONS_BUYMEACOFFEE_LABEL: Icon bei Buy-Me-a-Coffee-Links anzeigen
+LINKICONS_LIBERAPAY_LABEL: Icon bei Liberapay-Links anzeigen
+LINKICONS_OPENCOLLECTIVE_LABEL: Icon bei Open-Collective-Links anzeigen
 LINKICONS_CODEBERG_LABEL: Icon bei codeberg.org-Links anzeigen
 LINKICONS_WIKIPEDIA_LABEL: Icon bei wikipedia.org-Links anzeigen
 LINKICONS_XBOX_LABEL: Icon bei xbox.com-Links anzeigen

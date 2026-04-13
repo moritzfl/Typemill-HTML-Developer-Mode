@@ -20,6 +20,15 @@ See [Installation in the project README](../../README.md#installation).
 - **Docker Hub** (`hub.docker.com`)
 - **PyPI** (`pypi.org`)
 
+### Donations & memberships
+
+- **PayPal** (`paypal.com`, `paypal.me`)
+- **Patreon** (`patreon.com`)
+- **Ko-fi** (`ko-fi.com`)
+- **Buy Me a Coffee** (`buymeacoffee.com`)
+- **Liberapay** (`liberapay.com`)
+- **Open Collective** (`opencollective.com`)
+
 ### Apps & stores
 
 - **App Store** (`apps.apple.com`)
