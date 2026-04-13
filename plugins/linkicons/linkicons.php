@@ -275,15 +275,17 @@ class linkicons extends Plugin
         if (preg_match('/<svg\b[^>]*\bstyle=(["\'])(.*?)\1/i', $svg, $m)) {
             $existingStyle = trim($m[2]);
             $mergedStyle = $existingStyle === '' ? $style : rtrim($existingStyle, ';') . ';' . $style;
-            return preg_replace(
+            $result = preg_replace(
                 '/(<svg\b[^>]*\bstyle=)(["\'])(.*?)\2/i',
                 '$1$2' . $mergedStyle . '$2',
                 $svg,
                 1
             );
+            return $result ?? $svg;
         }
 
-        return preg_replace('/<svg\b([^>]*)>/i', '<svg$1 style="' . $style . '">', $svg, 1);
+        $result = preg_replace('/<svg\b([^>]*)>/i', '<svg$1 style="' . $style . '">', $svg, 1);
+        return $result ?? $svg;
     }
 
     private static function prepareIconMarkup(string $icon, bool $before, bool $iconOnly): string

@@ -8,6 +8,9 @@ use Typemill\Models\User;
 
 class VersionStore
 {
+    private const MAX_SNAPSHOT_FILES = 500;
+    private const MAX_SNAPSHOT_BYTES = 50 * 1024 * 1024; // 50 MB
+
     private StorageWrapper $storage;
     private LineDiff $diff;
     private VersionRecordRepository $records;
@@ -67,7 +70,6 @@ class VersionStore
         $entry = [
             'id' => $this->generateVersionId(),
             'action' => $action,
-            'timestamp' => $timestamp,
             'created_at' => $isoNow,
             'updated_at' => $isoNow,
             'username' => $username,
@@ -104,7 +106,6 @@ class VersionStore
                 $lastIndex = array_key_last($record['versions']);
                 $entry['id'] = $record['versions'][$lastIndex]['id'];
                 $entry['created_at'] = $record['versions'][$lastIndex]['created_at'];
-                $entry['timestamp'] = $record['versions'][$lastIndex]['timestamp'];
                 $record['versions'][$lastIndex] = $entry;
             }
         } else {
@@ -130,8 +131,7 @@ class VersionStore
             $record['deleted'] = [
                 'pageid' => $pageId,
                 'version_id' => $entry['id'],
-                'timestamp' => $timestamp,
-                'deleted_at' => gmdate('c', $timestamp),
+                'deleted_at' => $isoNow,
                 'username' => $username,
                 'user_label' => $entry['user_label'],
                 'title' => $entry['title'],
@@ -304,7 +304,8 @@ class VersionStore
         }
 
         if ($result !== true) {
-            return ['success' => false, 'message' => is_string($result) ? $result : 'Version restore failed.'];
+            error_log('[versions] Restore failed for page ' . ($item->path ?? '?') . ': ' . (is_string($result) ? $result : 'unknown error'));
+            return ['success' => false, 'message' => 'Version restore failed.'];
         }
 
         if (!empty($version['metadata'])) {
@@ -372,19 +373,24 @@ class VersionStore
         }
 
         foreach ($version['snapshot_files'] as $file) {
+            $filePath = str_replace('\\', '/', (string) ($file['path'] ?? ''));
+            if (!$this->isValidSnapshotPath($filePath)) {
+                return ['success' => false, 'message' => 'Invalid file path in snapshot.'];
+            }
+
             $location = $file['location'] ?? 'contentFolder';
             $content = isset($file['content_base64']) ? base64_decode($file['content_base64'], true) : ($file['content'] ?? '');
             if ($content === false) {
                 return ['success' => false, 'message' => 'A deleted snapshot could not be decoded.'];
             }
 
-            $directory = dirname($file['path']);
+            $directory = dirname($filePath);
             if ($directory !== '.' && $directory !== '') {
                 $this->storage->createFolder($location, $directory);
             }
 
             $folder = ($directory !== '.' && $directory !== '') ? $directory : '';
-            $filename = basename($file['path']);
+            $filename = basename($filePath);
             $this->storage->writeFile($location, $folder, $filename, $content);
         }
 
@@ -422,11 +428,12 @@ class VersionStore
         $threshold = strtotime('-' . $retentionDays . ' days');
 
         foreach ($this->records->loadAllRecords() as $record) {
-            if (empty($record['deleted']['timestamp'])) {
+            if (empty($record['deleted']['deleted_at'])) {
                 continue;
             }
 
-            if ((int) $record['deleted']['timestamp'] > $threshold) {
+            $deletedTime = strtotime($record['deleted']['deleted_at']);
+            if ($deletedTime === false || $deletedTime > $threshold) {
                 continue;
             }
 
@@ -532,7 +539,9 @@ class VersionStore
         }
 
         $zipPath = $tempPath . '.zip';
-        @unlink($tempPath);
+        if (!unlink($tempPath)) {
+            error_log('[versions] Failed to remove temp placeholder file: ' . $tempPath);
+        }
 
         $zip = new \ZipArchive();
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
@@ -549,12 +558,16 @@ class VersionStore
         $zip->close();
 
         if ($addedFiles === 0 || !file_exists($zipPath)) {
-            @unlink($zipPath);
+            if (file_exists($zipPath) && !unlink($zipPath)) {
+                error_log('[versions] Failed to remove empty zip file: ' . $zipPath);
+            }
             return null;
         }
 
         $zipContent = file_get_contents($zipPath);
-        @unlink($zipPath);
+        if (!unlink($zipPath)) {
+            error_log('[versions] Failed to remove zip temp file: ' . $zipPath);
+        }
 
         if ($zipContent === false) {
             return null;
@@ -607,9 +620,20 @@ class VersionStore
         );
 
         $files = [];
+        $totalBytes = 0;
         foreach ($iterator as $file) {
             if (!$file->isFile()) {
                 continue;
+            }
+
+            if (count($files) >= self::MAX_SNAPSHOT_FILES) {
+                error_log('[versions] Folder snapshot truncated: exceeded ' . self::MAX_SNAPSHOT_FILES . ' files in ' . $folderPath);
+                break;
+            }
+
+            if ($totalBytes + $file->getSize() > self::MAX_SNAPSHOT_BYTES) {
+                error_log('[versions] Folder snapshot truncated: exceeded ' . self::MAX_SNAPSHOT_BYTES . ' bytes in ' . $folderPath);
+                break;
             }
 
             $content = file_get_contents($file->getPathname());
@@ -617,6 +641,7 @@ class VersionStore
                 continue;
             }
 
+            $totalBytes += strlen($content);
             $path = str_replace($basePath . DIRECTORY_SEPARATOR, '', $file->getPathname());
             $files[] = [
                 'location' => 'contentFolder',
@@ -714,7 +739,33 @@ class VersionStore
 
     private function generateVersionId(): string
     {
-        return str_replace('.', '', uniqid('version_', true));
+        return 'version_' . bin2hex(random_bytes(12));
+    }
+
+    private function isValidSnapshotPath(string $path): bool
+    {
+        if ($path === '') {
+            return false;
+        }
+
+        // Reject null bytes
+        if (strpos($path, "\0") !== false) {
+            return false;
+        }
+
+        // Reject absolute paths
+        if (str_starts_with($path, '/')) {
+            return false;
+        }
+
+        // Reject path traversal segments
+        foreach (explode('/', $path) as $segment) {
+            if ($segment === '..') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function sanitizeRecordType(string $recordType): string

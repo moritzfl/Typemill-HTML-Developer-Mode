@@ -10,9 +10,9 @@ class VersionPreviewRenderer
 {
     private array $settings;
     private array $urlinfo;
-    private $dispatcher;
+    private object $dispatcher;
 
-    public function __construct(array $settings, array $urlinfo, $dispatcher)
+    public function __construct(array $settings, array $urlinfo, object $dispatcher)
     {
         $this->settings = $settings;
         $this->urlinfo = $urlinfo;
@@ -37,24 +37,29 @@ class VersionPreviewRenderer
             return '';
         }
 
-        $content = new Content($this->urlinfo['baseurl'] ?? '', $this->settings, $this->dispatcher);
-        $markdownArray = $content->markdownTextToArray($markdown);
+        try {
+            $content = new Content($this->urlinfo['baseurl'] ?? '', $this->settings, $this->dispatcher);
+            $markdownArray = $content->markdownTextToArray($markdown);
 
-        if (count($markdownArray) === 0) {
+            if (count($markdownArray) === 0) {
+                return '';
+            }
+
+            array_shift($markdownArray);
+            if (count($markdownArray) === 0) {
+                return '';
+            }
+
+            $body = $content->markdownArrayToText($markdownArray);
+            $contentArray = $content->getContentArray($body);
+            $contentArray = $this->dispatcher->dispatch(new OnContentArrayLoaded($contentArray), 'onContentArrayLoaded')->getData();
+
+            $contentHtml = $content->getContentHtml($contentArray);
+
+            return $this->dispatcher->dispatch(new OnHtmlLoaded($contentHtml), 'onHtmlLoaded')->getData();
+        } catch (\Throwable $e) {
+            error_log('[versions] Preview rendering failed: ' . $e->getMessage());
             return '';
         }
-
-        array_shift($markdownArray);
-        if (count($markdownArray) === 0) {
-            return '';
-        }
-
-        $body = $content->markdownArrayToText($markdownArray);
-        $contentArray = $content->getContentArray($body);
-        $contentArray = $this->dispatcher->dispatch(new OnContentArrayLoaded($contentArray), 'onContentArrayLoaded')->getData();
-
-        $contentHtml = $content->getContentHtml($contentArray);
-
-        return $this->dispatcher->dispatch(new OnHtmlLoaded($contentHtml), 'onHtmlLoaded')->getData();
     }
 }

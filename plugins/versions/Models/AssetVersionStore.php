@@ -39,15 +39,13 @@ class AssetVersionStore
 
         $recordId = $this->resolveRecordId($assetType, $name);
         $record = $this->records->loadAssetRecord($recordId);
-        $timestamp = time();
         $label = $this->resolveLabel($assetType);
 
-        $isoNow = gmdate('c', $timestamp);
+        $isoNow = gmdate('c');
 
         $entry = [
             'id' => $versionId,
             'action' => 'delete',
-            'timestamp' => $timestamp,
             'created_at' => $isoNow,
             'updated_at' => $isoNow,
             'username' => $username,
@@ -90,7 +88,6 @@ class AssetVersionStore
             'record_type' => 'asset',
             'record_id' => $recordId,
             'version_id' => $entry['id'],
-            'timestamp' => $timestamp,
             'deleted_at' => $isoNow,
             'username' => $username,
             'user_label' => $entry['user_label'],
@@ -242,6 +239,14 @@ class AssetVersionStore
         $pathInfo = pathinfo($name);
         $baseName = $pathInfo['filename'] ?? '';
         $extension = $pathInfo['extension'] ?? '';
+
+        if ($baseName === '') {
+            return [];
+        }
+
+        // Strip glob meta-characters so user-supplied filenames cannot escape the pattern
+        $baseName  = preg_replace('/[*?\[\]{}\\\\]/', '', $baseName) ?? '';
+        $extension = preg_replace('/[*?\[\]{}\\\\]/', '', $extension) ?? '';
 
         if ($baseName === '') {
             return [];

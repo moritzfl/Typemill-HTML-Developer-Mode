@@ -88,18 +88,7 @@ class AssetTrashMiddleware implements MiddlewareInterface
     private function resolveUsername(Request $request): string
     {
         $username = trim((string) ($request->getAttribute('c_username') ?? ''));
-        if ($username !== '') {
-            return $username;
-        }
 
-        $authorization = $request->getHeaderLine('Authorization');
-        if (preg_match('/Basic\\s+(.*)$/i', $authorization, $matches)) {
-            $decoded = base64_decode($matches[1], true);
-            if (is_string($decoded) && str_contains($decoded, ':')) {
-                return trim((string) explode(':', $decoded, 2)[0]) ?: 'unknown';
-            }
-        }
-
-        return 'unknown';
+        return $username !== '' ? $username : 'unknown';
     }
 }

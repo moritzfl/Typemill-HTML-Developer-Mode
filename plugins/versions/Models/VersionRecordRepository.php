@@ -117,6 +117,7 @@ class VersionRecordRepository
 
         $decoded = json_decode($raw, true);
         if (!is_array($decoded)) {
+            error_log('[versions] Malformed record file for ID ' . $recordId . ' in folder ' . $folder . '; returning default.');
             return $defaultRecord($recordId);
         }
 

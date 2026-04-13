@@ -33,9 +33,39 @@ class htmldeveloper extends Plugin
             return;
         }
 
-        $domains = array_filter(array_map('trim', explode("\n", str_replace(',', "\n", $raw))));
+        $candidates = array_filter(array_map('trim', explode("\n", str_replace(',', "\n", $raw))));
+        $domains    = array_values(array_filter($candidates, [$this, 'isValidCspSource']));
+
+        if (empty($domains)) {
+            return;
+        }
 
         $event->setData(array_merge($event->getData(), $domains));
+    }
+
+    /**
+     * Accept only well-formed CSP source expressions:
+     *   - CSP keywords:  'self', 'none', 'unsafe-inline', 'unsafe-eval'
+     *   - Scheme-only:   https: http: data: blob:
+     *   - Host with optional scheme and/or leading wildcard subdomain:
+     *     example.com  *.example.com  https://example.com  https://*.example.com:8080
+     */
+    private function isValidCspSource(string $source): bool
+    {
+        if (in_array($source, ["'self'", "'none'", "'unsafe-inline'", "'unsafe-eval'"], true)) {
+            return true;
+        }
+
+        // scheme-only (e.g. "https:" or "data:")
+        if (preg_match('/^[a-zA-Z][a-zA-Z0-9+\-.]*:$/', $source)) {
+            return true;
+        }
+
+        // optional scheme + optional wildcard subdomain + hostname + optional port
+        return (bool) preg_match(
+            '/^(?:[a-zA-Z][a-zA-Z0-9+\-.]*:\/\/)?(?:\*\.)?[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*(?::\d{1,5})?$/',
+            $source
+        );
     }
 
     /**
