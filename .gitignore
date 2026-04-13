@@ -14,3 +14,4 @@
 !README_TESTING.md
 **/node_modules/
 **/npm-debug.log*
+/themes/cyanine/**
