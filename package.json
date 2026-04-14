@@ -1,18 +1,27 @@
 {
   "name": "typemill-html-developer-mode",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "npm run build:frontend",
     "build:frontend": "npm run build:rueckenwind",
     "build:rueckenwind": "tailwindcss -i ./themes/rueckenwind/styles/tailwind.css -o ./themes/rueckenwind/css/theme.css --minify",
     "watch:rueckenwind": "tailwindcss -i ./themes/rueckenwind/styles/tailwind.css -o ./themes/rueckenwind/css/theme.css --watch",
     "update:mergely": "node ./scripts/update-mergely.mjs",
-    "sync:frontend": "npm run build:rueckenwind && npm run update:mergely"
+    "sync:frontend": "npm run build:rueckenwind && npm run update:mergely",
+    "test:setup": "node scripts/setup-test-docker.mjs",
+    "test:php:setup": "docker compose -f docker-compose.typemill.yml exec typemill sh -c 'curl -sSL https://phar.phpunit.de/phpunit-11.phar -o /var/www/html/tests/php/phpunit.phar && chmod +x /var/www/html/tests/php/phpunit.phar && echo \"PHPUnit phar installed.\"'",
+    "test:php": "docker compose -f docker-compose.typemill.yml exec typemill sh -c 'php /var/www/html/tests/php/phpunit.phar --configuration /var/www/html/tests/php/phpunit.xml'",
+    "test:php:local:setup": "cd tests/php && composer install",
+    "test:php:local": "tests/php/vendor/bin/phpunit --configuration tests/php/phpunit.xml",
+    "test:api": "vitest run --config vitest.config.js",
+    "test:api:watch": "vitest --config vitest.config.js",
+    "test": "npm run test:php:local && npm run test:api"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.2.2",
     "mergely": "5.4.7",
-    "tailwindcss": "4.2.2"
+    "tailwindcss": "4.2.2",
+    "vitest": "^3.0.0"
   }
 }
-

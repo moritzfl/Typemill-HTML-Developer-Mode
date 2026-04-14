@@ -12,6 +12,15 @@
 !plugins/
 !plugins/**
 !README_TESTING.md
+!vitest.config.js
+!tests/
+!tests/**
+tests/php/phpunit.phar
+tests/php/vendor/
 **/node_modules/
 **/npm-debug.log*
 /themes/cyanine/**
+/tests/php/composer.lock
+/tests/php/.phpunit.result.cache
+Agents.md
+

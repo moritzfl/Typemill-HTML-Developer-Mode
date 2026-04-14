@@ -1,5 +1,85 @@
 # Testing With A Live Typemill Instance
 
+## Automated Tests
+
+The repo includes two complementary test layers, both driven by the Docker container.
+
+### PHP Unit Tests
+
+Tests for pure PHP logic — path validation, ID generation, snapshot size limits.
+
+#### Option A: inside the Docker container (recommended)
+
+The container provides the full Typemill environment, so all plugin dependencies are available.
+
+**First-time setup** (downloads the PHPUnit phar into the container):
+
+```bash
+docker compose -f docker-compose.typemill.yml up -d
+npm run test:php:setup
+```
+
+**Run the tests:**
+
+```bash
+npm run test:php
+```
+
+#### Option B: locally, without Docker
+
+The test suite ships with a `StorageWrapper` stub so it can run without a Typemill checkout.
+You only need PHP 8.2+ and Composer available locally.
+
+**First-time setup** (installs PHPUnit into `tests/php/vendor/`):
+
+```bash
+npm run test:php:local:setup
+```
+
+**Run the tests:**
+
+```bash
+npm run test:php:local
+```
+
+Note: filesystem-touching tests (e.g. `SnapshotLimitTest`) create temporary directories
+under `sys_get_temp_dir()` and clean up after themselves.
+
+### API Integration Tests (run from the host)
+
+Tests for HTTP endpoints — access control, response shapes, auth flow.
+
+**One-time setup** (starts Docker, provisions Typemill, writes `.env.test`):
+
+```bash
+npm install
+npm run test:setup
+```
+
+This is fully automated — no browser wizard required. The script creates a local
+Typemill instance with a fixed test admin account and writes the credentials to
+`.env.test` so subsequent test runs work without any manual steps.
+
+**Run the tests:**
+
+```bash
+npm run test:api
+```
+
+Watch mode for development:
+
+```bash
+npm run test:api:watch
+```
+
+### Run Everything
+
+```bash
+npm test
+```
+
+---
+
 This repo can run a real Typemill instance in Docker for browser-level reproduction work.
 No local Typemill checkout is needed — the image is built directly from the Typemill
 GitHub repo.
@@ -9,6 +89,8 @@ GitHub repo.
 - Docker Desktop or a working local Docker engine
 
 ## Start The Instance
+
+`npm run test:setup` handles starting the container. To start it manually:
 
 ```bash
 docker compose -f docker-compose.typemill.yml up -d --build
@@ -47,19 +129,28 @@ Container state (content, settings, data, cache) is stored under:
 
 This folder is local and intentionally not committed. It keeps repeated test sessions
 fast and avoids re-running setup from scratch every time. For a clean slate, delete
-`.docker/typemill/` and bring the stack up again.
+`.docker/typemill/` and bring the stack up again, then re-run `npm run test:setup`.
 
 ## Logging In
 
-On first start, complete the Typemill setup wizard at `http://127.0.0.1:8080/setup`.
-The admin credentials you set there are stored in `.docker/typemill/settings/`.
+`npm run test:setup` provisions a test admin account automatically. The credentials
+are written to `.env.test` and to `.docker/typemill/settings/users/`:
+
+```
+Username: admin
+Password: Test1234!
+```
 
 For API calls (e.g. in automated tests or `curl`), Typemill uses session-based auth:
 
-1. POST to `/api/v1/auth` with `{"username": "...", "password": "..."}` and include a
-   `Referer: http://127.0.0.1:8080/` header — without it the request is rejected.
+1. POST to `/tm/login` with form-encoded body (`username=...&password=...`) and a
+   `Referer: http://127.0.0.1:8080/tm/login` header. Use `redirect: manual` to
+   capture the `Set-Cookie` header without following the redirect.
 2. Store the returned session cookie.
-3. Pass `X-Session-Auth: true` on subsequent API requests alongside the cookie.
+3. Pass `Cookie: <session>` and `X-Session-Auth: true` on subsequent API requests.
+
+The `X-Session-Auth` header signals to Typemill's `ApiAuthentication` middleware
+that the request carries a valid web session, bypassing the HTTP Basic Auth check.
 
 ## Typical Reproduction Flow
 

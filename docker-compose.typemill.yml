@@ -9,6 +9,7 @@ services:
     volumes:
       - ./plugins:/var/www/html/plugins
       - ./themes:/var/www/html/themes
+      - ./tests:/var/www/html/tests
       - ./.docker/typemill/settings:/var/www/html/settings
       - ./.docker/typemill/content:/var/www/html/content
       - ./.docker/typemill/data:/var/www/html/data

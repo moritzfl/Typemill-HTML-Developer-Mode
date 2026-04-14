@@ -1,0 +1,13 @@
+{
+    "name": "typemill-plugins/tests",
+    "description": "PHPUnit tests for Typemill plugins. Runs locally without a Typemill checkout via StorageWrapper stubs.",
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.2"
+        }
+    }
+}
