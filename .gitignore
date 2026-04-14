@@ -22,5 +22,5 @@ tests/php/vendor/
 /themes/cyanine/**
 /tests/php/composer.lock
 /tests/php/.phpunit.result.cache
-Agents.md
+!Agents.md
 
