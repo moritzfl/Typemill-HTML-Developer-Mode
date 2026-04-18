@@ -15,7 +15,11 @@
  * HTTP Basic Auth.
  */
 export async function createSession(baseUrl, username, password) {
-    const body = new URLSearchParams({ username, password })
+    const body = new URLSearchParams({
+        username,
+        password,
+        'personal-honey-mail': '',
+    })
 
     const loginResp = await fetch(`${baseUrl}/tm/login`, {
         method: 'POST',
