@@ -372,6 +372,7 @@ class VersionStore
             ];
         }
 
+        $operations = [];
         foreach ($version['snapshot_files'] as $file) {
             $filePath = str_replace('\\', '/', (string) ($file['path'] ?? ''));
             if (!$this->isValidSnapshotPath($filePath)) {
@@ -385,13 +386,49 @@ class VersionStore
             }
 
             $directory = dirname($filePath);
-            if ($directory !== '.' && $directory !== '') {
-                $this->storage->createFolder($location, $directory);
-            }
-
             $folder = ($directory !== '.' && $directory !== '') ? $directory : '';
             $filename = basename($filePath);
-            $this->storage->writeFile($location, $folder, $filename, $content);
+
+            $operations[] = [
+                'location' => $location,
+                'directory' => $directory,
+                'folder' => $folder,
+                'filename' => $filename,
+                'content' => $content,
+            ];
+        }
+
+        $writtenFiles = [];
+        $createdDirectories = [];
+
+        try {
+            foreach ($operations as $operation) {
+                $location = $operation['location'];
+                $directory = $operation['directory'];
+
+                if ($directory !== '.' && $directory !== '' && !$this->directoryExists($location, $directory)) {
+                    if (!$this->storage->createFolder($location, $directory)) {
+                        throw new \RuntimeException('Failed to create restore directory.');
+                    }
+                    $createdDirectories[] = [
+                        'location' => $location,
+                        'path' => $directory,
+                    ];
+                }
+
+                if (!$this->storage->writeFile($location, $operation['folder'], $operation['filename'], $operation['content'])) {
+                    throw new \RuntimeException('Failed to write restored file.');
+                }
+
+                $writtenFiles[] = [
+                    'location' => $location,
+                    'folder' => $operation['folder'],
+                    'filename' => $operation['filename'],
+                ];
+            }
+        } catch (\Throwable $e) {
+            $this->rollbackRestoreFiles($writtenFiles, $createdDirectories);
+            return ['success' => false, 'message' => 'Deleted version could not be restored completely.'];
         }
 
         $record['deleted'] = null;
@@ -710,6 +747,48 @@ class VersionStore
         }
 
         return $username;
+    }
+
+    private function rollbackRestoreFiles(array $writtenFiles, array $createdDirectories): void
+    {
+        foreach (array_reverse($writtenFiles) as $file) {
+            $this->storage->deleteFile($file['location'], $file['folder'], $file['filename']);
+        }
+
+        foreach (array_reverse($createdDirectories) as $directory) {
+            $this->removeDirectoryIfEmpty($directory['location'], $directory['path']);
+        }
+    }
+
+    private function directoryExists(string $location, string $path): bool
+    {
+        $fullPath = $this->resolveStoragePath($location, $path);
+        return $fullPath !== null && is_dir($fullPath);
+    }
+
+    private function removeDirectoryIfEmpty(string $location, string $path): void
+    {
+        $fullPath = $this->resolveStoragePath($location, $path);
+        if ($fullPath === null || !is_dir($fullPath)) {
+            return;
+        }
+
+        @rmdir($fullPath);
+    }
+
+    private function resolveStoragePath(string $location, string $path = ''): ?string
+    {
+        $basePath = $this->storage->getFolderPath($location);
+        if (!is_string($basePath) || $basePath === '') {
+            return null;
+        }
+
+        $trimmedPath = trim(str_replace('/', DIRECTORY_SEPARATOR, $path), DIRECTORY_SEPARATOR);
+        $resolvedBasePath = rtrim($basePath, DIRECTORY_SEPARATOR);
+
+        return $trimmedPath === ''
+            ? $resolvedBasePath
+            : $resolvedBasePath . DIRECTORY_SEPARATOR . $trimmedPath;
     }
 
     private function shouldMergeIntoLastVersion(array $versions, string $username, int $groupHours): bool

@@ -584,6 +584,7 @@ class versions extends Plugin
         $forceDelete = !empty($params['force_delete']);
         $snapshotFiles = [];
         $restorable = false;
+        $currentMarkdown = $store->readCurrentMarkdown($item);
 
         if (!$forceDelete) {
             try {
@@ -596,20 +597,6 @@ class versions extends Plugin
                 ], 409);
             }
         }
-
-        $store->storeVersion(
-            $item,
-            $metadata,
-            $store->readCurrentMarkdown($item),
-            $username,
-            $this->getPluginSettings() ?: [],
-            'delete',
-            [
-                'force_new' => true,
-                'snapshot_files' => $snapshotFiles,
-                'restorable' => $restorable,
-            ]
-        );
 
         $urlinfo = $this->container->get('urlinfo');
         $langattr = $this->getSettings()['langattr'];
@@ -626,6 +613,20 @@ class versions extends Plugin
         if ($result !== true) {
             return $this->jsonResponse($response, ['message' => $result], 500);
         }
+
+        $store->storeVersion(
+            $item,
+            $metadata,
+            $currentMarkdown,
+            $username,
+            $this->getPluginSettings() ?: [],
+            'delete',
+            [
+                'force_new' => true,
+                'snapshot_files' => $snapshotFiles,
+                'restorable' => $restorable,
+            ]
+        );
 
         if (count($item->keyPathArray) === 1) {
             $navigation->clearNavigation();
