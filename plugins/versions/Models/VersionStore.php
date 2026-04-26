@@ -384,9 +384,16 @@ class VersionStore
             }
 
             $location = $file['location'] ?? 'contentFolder';
-            $content = isset($file['content_base64']) ? base64_decode($file['content_base64'], true) : ($file['content'] ?? '');
-            if ($content === false) {
-                return ['success' => false, 'message' => 'A deleted snapshot could not be decoded.'];
+            if (isset($file['snapshot_path']) && file_exists($file['snapshot_path'])) {
+                $content = file_get_contents($file['snapshot_path']);
+                if ($content === false) {
+                    return ['success' => false, 'message' => 'A deleted snapshot could not be read from disk.'];
+                }
+            } else {
+                $content = isset($file['content_base64']) ? base64_decode($file['content_base64'], true) : ($file['content'] ?? '');
+                if ($content === false) {
+                    return ['success' => false, 'message' => 'A deleted snapshot could not be decoded.'];
+                }
             }
 
             $directory = dirname($filePath);

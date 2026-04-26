@@ -85,7 +85,26 @@ class VersionRecordRepository
     {
         $folder = $recordType === 'asset' ? 'assets' : 'pages';
 
+        // Delete external snapshot files for this record
+        $snapshotBase = rtrim($this->storage->getFolderPath('dataFolder'), DIRECTORY_SEPARATOR)
+            . DIRECTORY_SEPARATOR . $this->pluginName
+            . DIRECTORY_SEPARATOR . 'snapshots'
+            . DIRECTORY_SEPARATOR . $recordId;
+        if (is_dir($snapshotBase)) {
+            $this->recursiveDeleteDir($snapshotBase);
+        }
+
         return $this->storage->deleteFile('dataFolder', $this->pluginName . DIRECTORY_SEPARATOR . $folder, $recordId . '.json');
+    }
+
+    private function recursiveDeleteDir(string $dir): void
+    {
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            $path = $dir . DIRECTORY_SEPARATOR . $file;
+            is_dir($path) ? $this->recursiveDeleteDir($path) : unlink($path);
+        }
+        rmdir($dir);
     }
 
     private function loadRecordsFromFolder(string $folder, callable $defaultRecord): array

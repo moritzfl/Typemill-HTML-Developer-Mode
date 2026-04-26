@@ -21,9 +21,13 @@ class TrashDownloadService
                 continue;
             }
 
-            $content = isset($file['content_base64'])
-                ? base64_decode($file['content_base64'], true)
-                : ($file['content'] ?? '');
+            if (isset($file['snapshot_path']) && file_exists($file['snapshot_path'])) {
+                $content = file_get_contents($file['snapshot_path']);
+            } else {
+                $content = isset($file['content_base64'])
+                    ? base64_decode($file['content_base64'], true)
+                    : ($file['content'] ?? '');
+            }
 
             if ($content === false || $content === null) {
                 continue;

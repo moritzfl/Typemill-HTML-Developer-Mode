@@ -32,12 +32,12 @@ class AssetVersionStore
             return ['success' => false, 'message' => 'Asset name is missing.'];
         }
 
-        $snapshotFiles = $this->createSnapshotFiles($assetType, $name);
+        $recordId = $this->resolveRecordId($assetType, $name);
+        $snapshotFiles = $this->createSnapshotFiles($assetType, $name, $recordId, $versionId);
         if (empty($snapshotFiles)) {
             return ['success' => false, 'message' => ucfirst($assetType) . ' not found.'];
         }
 
-        $recordId = $this->resolveRecordId($assetType, $name);
         $record = $this->records->loadAssetRecord($recordId);
         $label = $this->resolveLabel($assetType);
 
@@ -71,7 +71,11 @@ class AssetVersionStore
 
         $record['versions'][] = $entry;
         if (count($record['versions']) > $maxVersions) {
+            $dropped = array_slice($record['versions'], 0, count($record['versions']) - $maxVersions);
             $record['versions'] = array_slice($record['versions'], -1 * $maxVersions);
+            foreach ($dropped as $droppedVersion) {
+                $this->cleanupVersionSnapshots($recordId, $droppedVersion['id']);
+            }
         }
 
         $record['asset'] = [
@@ -210,17 +214,40 @@ class AssetVersionStore
         return $downloadFiles[0];
     }
 
-    private function createSnapshotFiles(string $assetType, string $name): array
+    public function cleanupVersionSnapshots(string $recordId, string $versionId): void
     {
-        if ($assetType === 'image') {
-            return $this->snapshotImageFiles($name);
+        $dir = $this->getSnapshotBasePath() . DIRECTORY_SEPARATOR . $recordId . DIRECTORY_SEPARATOR . $versionId;
+        if (is_dir($dir)) {
+            $this->recursiveDeleteDir($dir);
         }
-
-        return $this->snapshotMediaFile($name);
     }
 
-    private function snapshotMediaFile(string $name): array
+    private function createSnapshotFiles(string $assetType, string $name, string $recordId, string $versionId): array
     {
+        if ($assetType === 'image') {
+            return $this->snapshotImageFiles($name, $recordId, $versionId);
+        }
+
+        return $this->snapshotMediaFile($name, $recordId, $versionId);
+    }
+
+    private function snapshotMediaFile(string $name, string $recordId, string $versionId): array
+    {
+        $srcPath = rtrim($this->storage->getFolderPath('fileFolder'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
+        if (!file_exists($srcPath)) {
+            return [];
+        }
+
+        $snapshotPath = $this->copyToSnapshot($srcPath, $recordId, $versionId, basename($name));
+        if ($snapshotPath !== null) {
+            return [[
+                'location' => 'fileFolder',
+                'path' => $name,
+                'snapshot_path' => $snapshotPath,
+            ]];
+        }
+
+        // Fallback for very small files or copy failures
         $content = $this->storage->getFile('fileFolder', '', $name);
         if ($content === false) {
             return [];
@@ -233,7 +260,7 @@ class AssetVersionStore
         ]];
     }
 
-    private function snapshotImageFiles(string $name): array
+    private function snapshotImageFiles(string $name, string $recordId, string $versionId): array
     {
         $name = basename($name);
         $pathInfo = pathinfo($name);
@@ -253,21 +280,21 @@ class AssetVersionStore
         }
 
         $snapshots = [];
-        $snapshots = array_merge($snapshots, $this->snapshotAssetLocationFiles('liveFolder', [$name]));
-        $snapshots = array_merge($snapshots, $this->snapshotAssetLocationFiles('thumbsFolder', [$name]));
-        $snapshots = array_merge($snapshots, $this->snapshotAssetLocationFiles('originalFolder', $this->globLocationFiles('originalFolder', $baseName . '.*')));
+        $snapshots = array_merge($snapshots, $this->snapshotAssetLocationFiles('liveFolder', [$name], $recordId, $versionId));
+        $snapshots = array_merge($snapshots, $this->snapshotAssetLocationFiles('thumbsFolder', [$name], $recordId, $versionId));
+        $snapshots = array_merge($snapshots, $this->snapshotAssetLocationFiles('originalFolder', $this->globLocationFiles('originalFolder', $baseName . '.*'), $recordId, $versionId));
 
         if ($extension !== '') {
             $snapshots = array_merge(
                 $snapshots,
-                $this->snapshotAssetLocationFiles('customFolder', $this->globLocationFiles('customFolder', $baseName . '-*.' . $extension))
+                $this->snapshotAssetLocationFiles('customFolder', $this->globLocationFiles('customFolder', $baseName . '-*.' . $extension), $recordId, $versionId)
             );
         }
 
         return $snapshots;
     }
 
-    private function snapshotAssetLocationFiles(string $location, array $filenames): array
+    private function snapshotAssetLocationFiles(string $location, array $filenames, string $recordId, string $versionId): array
     {
         $snapshots = [];
         foreach ($filenames as $filename) {
@@ -276,6 +303,22 @@ class AssetVersionStore
                 continue;
             }
 
+            $srcPath = rtrim($this->storage->getFolderPath($location), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+            if (!file_exists($srcPath)) {
+                continue;
+            }
+
+            $snapshotPath = $this->copyToSnapshot($srcPath, $recordId, $versionId, $filename);
+            if ($snapshotPath !== null) {
+                $snapshots[] = [
+                    'location' => $location,
+                    'path' => $filename,
+                    'snapshot_path' => $snapshotPath,
+                ];
+                continue;
+            }
+
+            // Fallback for small files or copy failures
             $content = $this->storage->getFile($location, '', $filename);
             if ($content === false) {
                 continue;
@@ -304,6 +347,37 @@ class AssetVersionStore
         }
 
         return array_map('basename', $matches);
+    }
+
+    private function getSnapshotBasePath(): string
+    {
+        $base = $this->storage->getFolderPath('dataFolder');
+        return rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'versions' . DIRECTORY_SEPARATOR . 'snapshots';
+    }
+
+    private function copyToSnapshot(string $srcPath, string $recordId, string $versionId, string $filename): ?string
+    {
+        $dir = $this->getSnapshotBasePath() . DIRECTORY_SEPARATOR . $recordId . DIRECTORY_SEPARATOR . $versionId;
+        if (!is_dir($dir) && !mkdir($dir, 0775, true)) {
+            return null;
+        }
+
+        $destPath = $dir . DIRECTORY_SEPARATOR . $filename;
+        if (!copy($srcPath, $destPath)) {
+            return null;
+        }
+
+        return $destPath;
+    }
+
+    private function recursiveDeleteDir(string $dir): void
+    {
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            $path = $dir . DIRECTORY_SEPARATOR . $file;
+            is_dir($path) ? $this->recursiveDeleteDir($path) : unlink($path);
+        }
+        rmdir($dir);
     }
 
     private function findVersion(array $record, string $versionId): ?array
