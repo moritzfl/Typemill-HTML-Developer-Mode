@@ -39,7 +39,8 @@ const app = Vue.createApp({
                     var self = this;
                     tmaxios.get('/api/v1/files')
                         .then(function(response) {
-                            self.files   = response.data.files || [];
+                            var all = response.data.files || [];
+                            self.files = all.filter(function(f) { return f.name && f.name.charAt(0) !== '.'; });
                             self.loading = false;
                         })
                         .catch(function() {
